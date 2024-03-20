@@ -49,11 +49,11 @@ while running == True:
             exit()
         elif event.type == pygame.KEYDOWN and not shoot:
             if event.key == pygame.K_UP:
-                angle += 10
+                angle += 5
                 trajectory = True
                 print(angle)
             elif event.key == pygame.K_DOWN:
-                angle -= 10
+                angle -= 5
                 trajectory = True
                 print(angle)
             elif event.key == pygame.K_RIGHT:
