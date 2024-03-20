@@ -40,6 +40,10 @@ angle = 0.0
 speed = 10.0
 trajectory = False
 
+# text
+pygame.font.init()
+my_font = pygame.font.SysFont('Comic Sans MS', 30)
+text = my_font.render(str(angle), True,'red')
 
 while running == True:
     for event in pygame.event.get():
@@ -110,6 +114,7 @@ while running == True:
     screen.blit(player_surf, player_rect)
     screen.blit(hopper_surf, hopper_rect)
     screen.blit(ball_surf, (x_val, y_val))
+    screen.blit(text, (100, 100))
     pygame.draw.rect(screen, 'Blue', player_rect, 5)
     pygame.draw.rect(screen, 'Green', hopper_rect, 5)
 
