@@ -20,10 +20,16 @@ player_surf = pygame.transform.flip(pygame.transform.scale(pygame.image.load('as
 player_rect = player_surf.get_rect(midbottom=(400, 480))
 ball_surf = pygame.transform.scale(pygame.image.load('assets/basketball ball.png').convert_alpha(), (80, 80))
 ball_rect = ball_surf.get_rect(center=(400, 480))
+hitbox1_surf = pygame.image.load('assets/hitbox1.png')
+hitbox1_rect = ball_surf.get_rect(center=(720, 480))
+
 hopper_surf = pygame.transform.scale(pygame.image.load('assets/hooooooop.png').convert_alpha(), (180, 300))
 hopper_rect = hopper_surf.get_rect(midbottom=(720, 480))
+bounce_sound = mixer.Sound('assets/Spring-Boing.wav')
+ball_Sound = mixer.Sound('assets/throw_sound.wav')
 
 # all ball values(parameters):
+bounce_count = 0
 x_ini = player_rect.x+30
 y_ini = player_rect.y+50
 x_val = x_ini
@@ -36,15 +42,16 @@ time2 = 0
 retention = 0.95
 gravity = 0.5
 shoot = False
-angle = 0.0
+angle = 10.0
 speed = 10.0
 trajectory = False
 
 # text
+color = 'black'
 pygame.font.init()
 my_font = pygame.font.SysFont('Comic Sans MS', 30)
-text = my_font.render(str(angle), True,'red')
-
+text1 = my_font.render("Angle : {}".format(angle), True,color)
+text2 = my_font.render("Speed : {}".format(speed), True,color)
 while running == True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -70,10 +77,10 @@ while running == True:
                 print(speed)
             elif event.key == pygame.K_SPACE:
                 shoot = True
-                ball_Sound = mixer.Sound('assets/throw_sound.wav')
                 ball_Sound.play()
                 time = 0  # Reset time after shooting
-
+            text1 = my_font.render("Angle : {} ".format(angle), True, color)
+            text2 = my_font.render("Speed : {}".format(speed), True, color)
     for time2 in range(0,60,3):
         x_pre = (x_ini+40 + math.cos(math.radians(angle)) * speed * time2)
         y_pre = (y_ini+40 - (math.sin(math.radians(angle)) * speed * time2) + 0.5 * gravity * time2 ** 2)
@@ -88,17 +95,21 @@ while running == True:
 
         if y_val + ball_surf.get_height() >= back_ground_surf.get_height()+10:
             # Implement bounce
+            bounce_sound.play()
+            bounce_count+=1
             y_val = back_ground_surf.get_height() - ball_surf.get_height()
             speed *= retention  # Reduce speed due to bounce
             angle = -angle  # Reverse angle (simulate bounce)
             x_ini = x_val
             y_ini = y_val
             time = 0
-        elif x_val + ball_surf.get_width() >= back_ground_surf.get_width():
+            print(bounce_count)
+        elif x_val + ball_surf.get_width() >= back_ground_surf.get_width() or bounce_count>3:
             # Reset ball position and shoot
             x_val = player_rect.x + 30
             y_val = player_rect.y + 50
             shoot = False
+            bounce_count+=1
 
             # Reset other parameters
             angle = 0.0
@@ -106,7 +117,7 @@ while running == True:
             x_ini = player_rect.x + 30
             y_ini = player_rect.y + 50
             time = 0
-
+            bounce_count=0
         time += 1  # Increment time
     if trajectory :
         back_ground_surf = pygame.transform.scale(pygame.image.load('assets/basketball court.png').convert_alpha(), (950, 600))
@@ -114,8 +125,10 @@ while running == True:
     screen.blit(player_surf, player_rect)
     screen.blit(hopper_surf, hopper_rect)
     screen.blit(ball_surf, (x_val, y_val))
-    screen.blit(text, (100, 100))
-    pygame.draw.rect(screen, 'Blue', player_rect, 5)
+    screen.blit(hitbox1_surf, hitbox1_rect)
+    screen.blit(text1, (50, 510))
+    screen.blit(text2, (41, 470))
+    pygame.draw.rect(screen, 'Blue', hitbox1_rect, 5)
     pygame.draw.rect(screen, 'Green', hopper_rect, 5)
 
     trajectory = False
