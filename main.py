@@ -6,6 +6,11 @@ from pygame import mixer
 pygame.init()
 running = True
 game_active = True
+# sound variable
+bounce_sound = mixer.Sound('assets/Spring-Boing.wav')
+ball_Sound = mixer.Sound('assets/throw_sound.wav')
+win_sound = mixer.Sound('assets/yeahoo.wav')
+loose_sound = mixer.Sound('assets/wii-sports-bowling-awww.wav')
 
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((950, 600))
@@ -20,28 +25,21 @@ player_surf = pygame.transform.flip(pygame.transform.scale(pygame.image.load('as
 player_rect = player_surf.get_rect(midbottom=(400, 480))
 ball_surf = pygame.transform.scale(pygame.image.load('assets/basketball ball.png').convert_alpha(), (50, 50))
 ball_rect = ball_surf.get_rect(center=(400, 480))
-hitbox1_surf = pygame.image.load('assets/hitbox1.png').convert_alpha()
-hitbox1_rect = hitbox1_surf.get_rect(center=(720, 480))
-hitbox2_surf = pygame.image.load('assets/hitbox2.png').convert_alpha()
-hitbox2_rect = hitbox1_surf.get_rect(center=(720, 500))
-
-
 hopper_surf = pygame.transform.scale(pygame.image.load('assets/hooooooop.png').convert_alpha(), (180, 300))
 hopper_rect = hopper_surf.get_rect(midbottom=(720, 480))
-bounce_sound = mixer.Sound('assets/Spring-Boing.wav')
-ball_Sound = mixer.Sound('assets/throw_sound.wav')
+
 hitbox_hooper_surf = pygame.image.load('assets/hopper_hit_box.png').convert_alpha()
 hitbox_hopper_rect1 = hitbox_hooper_surf.get_rect(topleft = (hopper_rect.topleft[0]+5,hopper_rect.topleft[1]+20))
 hitbox_hopper_rect2 = hitbox_hooper_surf.get_rect(topleft = (hopper_rect.topleft[0]+105,hopper_rect.topleft[1]+20))
 hitbox_score_surf = pygame.image.load('assets/hitbox_score.png').convert_alpha()
-hitbox_score_rect = hitbox_score_surf.get_rect(topleft = (hopper_rect.topleft[0]+45,hopper_rect.topleft[1]+35))
+hitbox_score_rect = hitbox_score_surf.get_rect(topleft = (hopper_rect.topleft[0]+45,hopper_rect.topleft[1]+80))
 # all ball values(parameters):
 bounce_count = 0
 x_ini = player_rect.x+30
 y_ini = player_rect.y+50
 x_val = x_ini
 y_val = y_ini
-x_pre = x_ini-30
+x_pre = x_ini
 y_pre = y_ini
 mass = 100
 time = 0
@@ -53,7 +51,7 @@ angle = 10.0
 speed = 10.0
 trajectory = False
 bouncetest=False
-
+played_test=False
 # text
 color = 'black'
 pygame.font.init()
@@ -70,19 +68,15 @@ while running == True:
             if event.key == pygame.K_UP:
                 angle += 5
                 trajectory = True
-                print(angle)
             elif event.key == pygame.K_DOWN:
                 angle -= 5
                 trajectory = True
-                print(angle)
             elif event.key == pygame.K_RIGHT:
                 speed += 1
                 trajectory = True
-                print(speed)
             elif event.key == pygame.K_LEFT and speed >= 10:
                 speed -= 1
                 trajectory = True
-                print(speed)
             elif event.key == pygame.K_SPACE:
                 shoot = True
                 ball_Sound.play()
@@ -91,8 +85,8 @@ while running == True:
             text2 = my_font.render("Speed : {}".format(speed), True, color)
     for time2 in range(0,60,3):
         if bouncetest==False:
-            x_pre = (x_ini+40 + math.cos(math.radians(angle)) * speed * time2)
-            y_pre = (y_ini+40 - (math.sin(math.radians(angle)) * speed * time2) + 0.5 * gravity * time2 ** 2)
+            x_pre = (x_ini + math.cos(math.radians(angle)) * speed * time2)
+            y_pre = (y_ini - (math.sin(math.radians(angle)) * speed * time2) + 0.5 * gravity * time2 ** 2)
             pygame.draw.circle(back_ground_surf,'white',(x_pre,y_pre),5)
 
     mouse = pygame.mouse
@@ -122,23 +116,34 @@ while running == True:
             bounce_sound.play()
             bouncetest=True
             bounce_count += 1
-            y_val = hopper_rect.top - ball_surf.get_height()-30  # Set y_val to the top of the hopper hitbox
+            y_val = hopper_rect.topleft[1]+20 - ball_surf.get_height()+20  # Set y_val to the top of the hopper hitbox
             speed *= 0.7  # Reduce speed due to bounce
             angle = -angle  # Reverse angle (simulate bounce)
             x_ini = x_val
             y_ini = y_val
             time = 0
             print(bounce_count)
-
-
-        elif x_val + ball_surf.get_width() >= back_ground_surf.get_width() or bounce_count>=3:
-            # Reset ball position and shoot
+        if ball_rect.colliderect(hitbox_score_rect) and played_test==False :
+            win_sound.play()
+            played_test=True
+            angle = 0.0
+            speed = 10.0
+            x_ini = player_rect.x + 30
+            y_ini = player_rect.y + 50
+            time = 0
+            bounce_count = 0
             x_val = player_rect.x + 30
             y_val = player_rect.y + 50
             shoot = False
-            bounce_count+=1
+            bouncetest = False
+            played_test = False
 
-            # Reset other parameters
+        elif x_val + ball_surf.get_width() >= back_ground_surf.get_width() or bounce_count>=3:
+            # Reset ball position and shoot
+            loose_sound.play()
+            x_val = player_rect.x + 30
+            y_val = player_rect.y + 50
+            shoot = False
             angle = 0.0
             speed = 10.0
             x_ini = player_rect.x + 30
@@ -146,12 +151,12 @@ while running == True:
             time = 0
             bounce_count=0
             bouncetest=False
+            played_test=False
         time += 1  # Increment time
 
     ball_rect.center = (x_val, y_val)
     if trajectory :
         back_ground_surf = pygame.transform.scale(pygame.image.load('assets/basketball court.png').convert_alpha(), (950, 600))
-    screen.blit(hitbox1_surf, hitbox1_rect)
     screen.blit(hitbox_score_surf, hitbox_score_rect)
     screen.blit(hitbox_hooper_surf,hitbox_hopper_rect2)
     screen.blit(hitbox_hooper_surf,hitbox_hopper_rect1)
@@ -164,7 +169,7 @@ while running == True:
     screen.blit(text1, (50, 510))
     screen.blit(text2, (41, 470))
 
-    pygame.draw.rect(screen, 'Blue', hitbox1_rect, 5)
+
     pygame.draw.rect(screen, 'Green', hopper_rect, 5)
 
     pygame.draw.rect(screen, 'Red', hitbox_hopper_rect1,5)
