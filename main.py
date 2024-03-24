@@ -52,6 +52,7 @@ shoot = False
 angle = 10.0
 speed = 10.0
 trajectory = False
+bouncetest=False
 
 # text
 color = 'black'
@@ -89,9 +90,10 @@ while running == True:
             text1 = my_font.render("Angle : {} ".format(angle), True, color)
             text2 = my_font.render("Speed : {}".format(speed), True, color)
     for time2 in range(0,60,3):
-        x_pre = (x_ini+40 + math.cos(math.radians(angle)) * speed * time2)
-        y_pre = (y_ini+40 - (math.sin(math.radians(angle)) * speed * time2) + 0.5 * gravity * time2 ** 2)
-        pygame.draw.circle(back_ground_surf,'white',(x_pre,y_pre),5)
+        if bouncetest==False:
+            x_pre = (x_ini+40 + math.cos(math.radians(angle)) * speed * time2)
+            y_pre = (y_ini+40 - (math.sin(math.radians(angle)) * speed * time2) + 0.5 * gravity * time2 ** 2)
+            pygame.draw.circle(back_ground_surf,'white',(x_pre,y_pre),5)
 
     mouse = pygame.mouse
     if mouse.get_pressed()[0]:
@@ -106,6 +108,7 @@ while running == True:
         if y_val + ball_surf.get_height() >= back_ground_surf.get_height()+10:
             # Implement bounce
             bounce_sound.play()
+            bouncetest=True
             bounce_count+=1
             y_val = back_ground_surf.get_height() - ball_surf.get_height()
             speed *= retention  # Reduce speed due to bounce
@@ -114,12 +117,13 @@ while running == True:
             y_ini = y_val
             time = 0
             print(bounce_count)
-        elif ball_rect.colliderect(hitbox_hopper_rect1) or ball_rect.colliderect(hitbox_hopper_rect2):
-            # Implement bounce
+        if ball_rect.colliderect(hitbox_hopper_rect1) or ball_rect.colliderect(hitbox_hopper_rect2):
+            # Implement bounce or any other action
             bounce_sound.play()
+            bouncetest=True
             bounce_count += 1
-            y_val = back_ground_surf.get_height() - ball_surf.get_height()
-            speed *= retention  # Reduce speed due to bounce
+            y_val = hopper_rect.top - ball_surf.get_height()-30  # Set y_val to the top of the hopper hitbox
+            speed *= 0.7  # Reduce speed due to bounce
             angle = -angle  # Reverse angle (simulate bounce)
             x_ini = x_val
             y_ini = y_val
@@ -141,6 +145,7 @@ while running == True:
             y_ini = player_rect.y + 50
             time = 0
             bounce_count=0
+            bouncetest=False
         time += 1  # Increment time
 
     ball_rect.center = (x_val, y_val)
