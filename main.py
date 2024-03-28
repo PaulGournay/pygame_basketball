@@ -32,7 +32,7 @@ hitbox_hooper_surf = pygame.image.load('assets/hopper_hit_box.png').convert_alph
 hitbox_hopper_rect1 = hitbox_hooper_surf.get_rect(topleft = (hopper_rect.topleft[0]+5,hopper_rect.topleft[1]+20))
 hitbox_hopper_rect2 = hitbox_hooper_surf.get_rect(topleft = (hopper_rect.topleft[0]+105,hopper_rect.topleft[1]+20))
 hitbox_score_surf = pygame.image.load('assets/hitbox_score.png').convert_alpha()
-hitbox_score_rect = hitbox_score_surf.get_rect(topleft = (hopper_rect.topleft[0]+45,hopper_rect.topleft[1]+80))
+hitbox_score_rect = hitbox_score_surf.get_rect(topleft = (hopper_rect.topleft[0]+45,hopper_rect.topleft[1]+60))
 # all ball values(parameters):
 bounce_count = 0
 x_ini = player_rect.x+30
@@ -55,9 +55,12 @@ played_test=False
 # text
 color = 'black'
 pygame.font.init()
+score = 0
 my_font = pygame.font.SysFont('Comic Sans MS', 30)
+my_font_1 = pygame.font.SysFont('Comic Sans MS', 50)
 text1 = my_font.render("Angle : {}".format(angle), True,color)
 text2 = my_font.render("Speed : {}".format(speed), True,color)
+
 while running == True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -92,6 +95,8 @@ while running == True:
     mouse = pygame.mouse
     if mouse.get_pressed()[0]:
         print(mouse.get_pos())
+    mouse = pygame.mouse
+    alpha = random.randint(0,len(positions)-1)
 
 
     if shoot == True:
@@ -137,6 +142,9 @@ while running == True:
             shoot = False
             bouncetest = False
             played_test = False
+            score += 1
+            player_rect.midbottom = positions[alpha]
+
 
         elif x_val + ball_surf.get_width() >= back_ground_surf.get_width() or bounce_count>=3:
             # Reset ball position and shoot
@@ -152,8 +160,10 @@ while running == True:
             bounce_count=0
             bouncetest=False
             played_test=False
+            player_rect.midbottom = positions[alpha]
+            ball_rect.center = (player_rect.x , player_rect.y )
         time += 1  # Increment time
-
+    text3 = my_font_1.render("{}".format(score), True, 'yellow')
     ball_rect.center = (x_val, y_val)
     if trajectory :
         back_ground_surf = pygame.transform.scale(pygame.image.load('assets/basketball court.png').convert_alpha(), (950, 600))
@@ -165,7 +175,7 @@ while running == True:
     screen.blit(hopper_surf, hopper_rect)
     screen.blit(ball_surf, ball_rect)
 
-
+    screen.blit(text3, (430,100))
     screen.blit(text1, (50, 510))
     screen.blit(text2, (41, 470))
 
