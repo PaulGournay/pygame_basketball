@@ -53,7 +53,7 @@ played_test = False
 color = 'black'
 pygame.font.init()
 score = 0
-my_font = pygame.font.SysFont('Comic Sans MS', 30)
+my_font = pygame.font.SysFont('Comic Sans MS', 31)
 my_font_1 = pygame.font.SysFont('Comic Sans MS', 50)
 text1 = my_font.render("Angle : {}".format(angle), True,color)
 text2 = my_font.render("Speed : {}".format(speed), True,color)

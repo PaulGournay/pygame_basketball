@@ -126,7 +126,7 @@ while running == True:
     screen.blit(text2, (41, 470))
 
 
-    pygame.draw.rect(screen, 'Green', hopper_rect, 5)
+    pygame.draw.rect(screen, 'Green', hopper_rect, 6)
 
     pygame.draw.rect(screen, 'Red', hitbox_hopper_rect1,5)
     pygame.draw.rect(screen,'Red',hitbox_hopper_rect2,5)
