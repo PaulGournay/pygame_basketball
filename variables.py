@@ -38,8 +38,6 @@ x_val = x_ini
 y_val = y_ini
 x_pre = x_ini
 y_pre = y_ini
-arrow_x = 260
-arrow_y = 540
 mass = 100
 time = 0
 time2 = 0
@@ -48,14 +46,23 @@ gravity = 0.5
 shoot = False
 angle = 10.0
 speed = 10.0
+memo_speed=speed
 trajectory = False
 bouncetest = False
 played_test = False
+#  parameters for gauge
+a=1
+b=-1
+c=1
+arrow_x = 260
+arrow_y = 540
 # text
 color = 'black'
 pygame.font.init()
 score = 0
 my_font = pygame.font.SysFont('Comic Sans MS', 30)
 my_font_1 = pygame.font.SysFont('Comic Sans MS', 50)
-text1 = my_font.render("Angle : {}".format(angle), True,color)
-text2 = my_font.render("Speed : {}".format(speed), True,color)
+score_font = pygame.font.Font('assets/font_score.TTF',50)
+text_font = pygame.font.Font('assets/font_score.TTF',30)
+text1 = text_font.render("Angle : {}".format(angle), True,color)
+text2 = text_font.render("Speed : {}".format(speed), True,color)
