@@ -1,12 +1,18 @@
-
+import pygame
+import random
+import math
+from pygame.time import get_ticks
+from pygame import mixer
 from variables import *
 pygame.init()
-
+running = True
+game_active = True
 # sound variable
 bounce_sound = mixer.Sound('assets/Spring-Boing.wav')
 ball_Sound = mixer.Sound('assets/throw_sound.wav')
 win_sound = mixer.Sound('assets/yeahoo.wav')
 loose_sound = mixer.Sound('assets/wii-sports-bowling-awww.wav')
+
 
 while running == True:
     for event in pygame.event.get():
@@ -44,6 +50,11 @@ while running == True:
         print(mouse.get_pos())
     mouse = pygame.mouse
     alpha = random.randint(0,len(positions)-1)
+    if shoot == False:
+        if arrow_x<=382:
+            arrow_x+=1
+        elif arrow_x:
+            arrow_x-=1
 
 
     if shoot == True:
@@ -75,38 +86,41 @@ while running == True:
             y_ini = y_val
             time = 0
             print(bounce_count)
-        if ball_rect.colliderect(hitbox_score_rect) and played_test == False :
+        if ball_rect.colliderect(hitbox_score_rect) and played_test==False :
             win_sound.play()
             played_test=True
             angle = 0.0
             speed = 10.0
-
+            x_ini = player_rect.x + 70
+            y_ini = player_rect.y + 90
             time = 0
             bounce_count = 0
-            x_val = player_rect.x + 30
-            y_val = player_rect.y + 50
+            player_rect.midbottom = positions[alpha]
+            x_val = player_rect.x + 70
+            y_val = player_rect.y + 90
             shoot = False
             bouncetest = False
             played_test = False
             score += 1
-            player_rect.midbottom = positions[alpha]
+
 
 
         elif x_val + ball_surf.get_width() >= back_ground_surf.get_width() or bounce_count>=3:
             # Reset ball position and shoot
             loose_sound.play()
-            x_val = player_rect.x + 30
-            y_val = player_rect.y + 50
             shoot = False
             angle = 0.0
             speed = 10.0
-            x_ini = player_rect.x + 30
-            y_ini = player_rect.y + 50
+            player_rect.midbottom = positions[alpha]
+            x_ini = player_rect.x + 70
+            y_ini = player_rect.y + 90
+            x_val = player_rect.x + 70
+            y_val = player_rect.y + 90
             time = 0
             bounce_count=0
             bouncetest=False
             played_test=False
-            player_rect.midbottom = positions[alpha]
+
             ball_rect.center = (player_rect.x , player_rect.y )
         time += 1  # Increment time
     text3 = my_font_1.render("{}".format(score), True, 'yellow')
@@ -120,17 +134,17 @@ while running == True:
     screen.blit(player_surf, player_rect)
     screen.blit(hopper_surf, hopper_rect)
     screen.blit(ball_surf, ball_rect)
-
+    screen.blit(power_gauge_surf, power_gauge_rect)
+    screen.blit(arrow_power_gauge_surf, arrow_power_gauge_rect)
     screen.blit(text3, (430,100))
     screen.blit(text1, (50, 510))
     screen.blit(text2, (41, 470))
 
 
-    pygame.draw.rect(screen, 'Green', hopper_rect, 6)
-
+    """pygame.draw.rect(screen, 'Green', hopper_rect, 5)
     pygame.draw.rect(screen, 'Red', hitbox_hopper_rect1,5)
     pygame.draw.rect(screen,'Red',hitbox_hopper_rect2,5)
-    pygame.draw.rect(screen,'Yellow',hitbox_score_rect)
+    pygame.draw.rect(screen,'Yellow',hitbox_score_rect)"""
     trajectory = False
     clock.tick(60)
     pygame.display.update()
