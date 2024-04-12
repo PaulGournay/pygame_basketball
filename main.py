@@ -21,13 +21,8 @@ while running == True:
             pygame.quit()
             exit()
         elif event.type == pygame.KEYDOWN and not shoot:
-            if event.key == pygame.K_UP:
-                angle += 5
-                trajectory = True
-            elif event.key == pygame.K_DOWN:
-                angle -= 5
-                trajectory = True
-            elif event.key == pygame.K_RIGHT:
+
+            if event.key == pygame.K_RIGHT:
                 speed += 1
                 memo_speed+=1
                 trajectory = True
@@ -54,7 +49,6 @@ while running == True:
     if mouse.get_pressed()[0]:
         print(mouse.get_pos())
     mouse = pygame.mouse
-    alpha = random.randint(0,len(positions)-1)
     if shoot == False:
         arrow_x += c
         angle += c
@@ -81,7 +75,7 @@ while running == True:
             y_ini = y_val
             time = 0
             print(bounce_count)
-        if ball_rect.colliderect(hitbox_hopper_rect1) or ball_rect.colliderect(hitbox_hopper_rect2):
+        if ball_rect.colliderect(hitbox_hopper_rect1) or ball_rect.colliderect(hitbox_hopper_rect2) or ball_rect.colliderect(hitbox_hopper_rect3) :
             # Implement bounce or any other action
             bounce_sound.play()
             bouncetest = True
@@ -98,7 +92,7 @@ while running == True:
             played_test=True
             angle = 0.0
             speed = memo_speed
-            player_rect.midbottom = positions[alpha]
+            player_rect.midbottom = (random.randint(100, 400),480)
             x_val = player_rect.x + 70
             y_val = player_rect.y + 90
             x_ini = player_rect.x + 70
@@ -118,7 +112,7 @@ while running == True:
             shoot = False
             angle = 0.0
             speed = memo_speed
-            player_rect.midbottom = positions[alpha]
+            player_rect.midbottom = (random.randint(100, 400),480)
             x_ini = player_rect.x + 70
             y_ini = player_rect.y + 90
             x_val = player_rect.x + 70
@@ -146,15 +140,17 @@ while running == True:
     screen.blit(ball_surf, ball_rect)
     screen.blit(power_gauge_surf, power_gauge_rect)
     screen.blit(arrow_power_gauge_surf, arrow_power_gauge_rect)
+    screen.blit(score_back_surf, score_back_rect)
     screen.blit(text3, (430,100))
     screen.blit(text1, (20, 510))
     screen.blit(text2, (30, 470))
 
 
-    """pygame.draw.rect(screen, 'Green', hopper_rect, 5)
+    pygame.draw.rect(screen, 'Green', hopper_rect, 5)
     pygame.draw.rect(screen, 'Red', hitbox_hopper_rect1,5)
     pygame.draw.rect(screen,'Red',hitbox_hopper_rect2,5)
-    pygame.draw.rect(screen,'Yellow',hitbox_score_rect)"""
+    pygame.draw.rect(screen, 'Red', hitbox_hopper_rect3, 5)
+    pygame.draw.rect(screen,'Yellow',hitbox_score_rect)
     trajectory = False
     clock.tick(60)
     pygame.display.update()

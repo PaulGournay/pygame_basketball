@@ -11,7 +11,8 @@ game_active = True
 
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((950, 600))
-positions = [(200, 480), (250, 480), (300, 480), (350, 480), (400, 480)]
+score_back_surf = pygame.transform.scale(pygame.image.load('assets/score back.png').convert_alpha(),(100,50))
+score_back_rect = score_back_surf.get_rect(center=(440,122))
 back_ground_surf1 = pygame.transform.scale(pygame.image.load('assets/basketball court.png').convert_alpha(), (950, 600))
 back_ground_surf = pygame.transform.scale(pygame.image.load('assets/basketball court.png').convert_alpha(), (950, 600))
 back_ground_rect = back_ground_surf.get_rect(topleft=(0, 0))
@@ -30,7 +31,8 @@ hitbox_hooper_surf = pygame.image.load('assets/hopper_hit_box.png').convert_alph
 hitbox_hopper_rect1 = hitbox_hooper_surf.get_rect(topleft = (hopper_rect.topleft[0]+5,hopper_rect.topleft[1]+20))
 hitbox_hopper_rect2 = hitbox_hooper_surf.get_rect(topleft = (hopper_rect.topleft[0]+105,hopper_rect.topleft[1]+20))
 hitbox_score_surf = pygame.image.load('assets/hitbox_score.png').convert_alpha()
-hitbox_score_rect = hitbox_score_surf.get_rect(topleft = (hopper_rect.topleft[0]+45,hopper_rect.topleft[1]+60))
+hitbox_score_rect = hitbox_score_surf.get_rect(topleft = (hopper_rect.topleft[0]+45,hopper_rect.topleft[1]+40))
+hitbox_hopper_rect3 = hitbox_hooper_surf.get_rect(midleft=(hitbox_score_rect.midleft[0]-40,hitbox_score_rect.midleft[1]-5))
 animation_counter = 0
 animation_speed = 100
 # all ball values(parameters):
