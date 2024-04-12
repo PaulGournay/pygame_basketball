@@ -11,7 +11,8 @@ game_active = True
 
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((950, 600))
-positions = [(200, 480), (250, 480), (300, 480), (350, 480), (400, 480)]
+score_back_surf = pygame.transform.scale(pygame.image.load('assets/score back.png').convert_alpha(),(100,50))
+score_back_rect = score_back_surf.get_rect(center=(440,122))
 back_ground_surf1 = pygame.transform.scale(pygame.image.load('assets/basketball court.png').convert_alpha(), (950, 600))
 back_ground_surf = pygame.transform.scale(pygame.image.load('assets/basketball court.png').convert_alpha(), (950, 600))
 back_ground_rect = back_ground_surf.get_rect(topleft=(0, 0))
