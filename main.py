@@ -127,6 +127,7 @@ while running == True:
         time += 1  # Increment time
     text3 = score_font.render("{}".format(score), True, 'black')
     ball_rect.center = (x_val, y_val)
+
     if trajectory :
         back_ground_surf = pygame.transform.scale(pygame.image.load('assets/basketball court.png').convert_alpha(), (950, 600))
     screen.blit(hitbox_score_surf, hitbox_score_rect)
