@@ -104,7 +104,6 @@ while running == True:
             x_ini = x_val
             y_ini = y_val
             time = 0
-            print(bounce_count)
         if ball_rect.colliderect(hitbox_hopper_rect1) or ball_rect.colliderect(hitbox_hopper_rect2) or ball_rect.colliderect(hitbox_hopper_rect3) :
             # Implement bounce or any other action
             bounce_sound.play()
@@ -116,7 +115,6 @@ while running == True:
             x_ini = x_val
             y_ini = y_val
             time = 0
-            print(bounce_count)
         if ball_rect.colliderect(hitbox_score_rect) and played_test==False :
             win_sound.play()
             played_test=True
