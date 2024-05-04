@@ -8,9 +8,14 @@ from pygame import mixer
 running = True
 game_active = True
 
-
 clock = pygame.time.Clock()
+
+# all image(sprite) initialisation :
 screen = pygame.display.set_mode((950, 600))
+menu_surf = pygame.transform.scale(pygame.image.load('assets/Menu.png').convert_alpha(), (950, 600))
+menu_rect = menu_surf.get_rect(topleft=(0, 0))
+play_button_surf=pygame.transform.scale(pygame.image.load('assets/Play_button.png').convert_alpha(), (230, 100))
+play_button_rect=play_button_surf.get_rect(center=(475, 230))
 score_back_surf = pygame.transform.scale(pygame.image.load('assets/score back.png').convert_alpha(),(100,50))
 score_back_rect = score_back_surf.get_rect(center=(440,122))
 back_ground_surf1 = pygame.transform.scale(pygame.image.load('assets/basketball court.png').convert_alpha(), (950, 600))
@@ -48,6 +53,7 @@ time = 0
 time2 = 0
 time3 = 0
 retention = 0.95
+retention2 = 0.70
 gravity = 0.5
 shoot = False
 angle = 10.0

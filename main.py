@@ -4,16 +4,43 @@ import math
 from pygame.time import get_ticks
 from pygame import mixer
 from variables import *
+
 pygame.init()
+
+# sound variable
+bounce_sound = mixer.Sound('assets/basketball-ball-hard-hit.wav')
+ball_Sound = mixer.Sound('assets/throw_sound.wav')
+ball_Sound.set_volume(0.5)  # Set volume to 50%
+win_sound = mixer.Sound('assets/yeahoo.wav')
+win_sound.set_volume(0.3)  # Set volume to 30%
+loose_sound = mixer.Sound('assets/wii-sports-bowling-awww.wav')
+loose_sound.set_volume(0.3)  # Set volume to 30%
+
+def game_menu():
+    menu_running = True
+    while menu_running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    menu_running = False
+                    return
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:  # Check if left mouse button is pressed
+                    # Check if the mouse cursor is over the play button
+                    if play_button_rect.collidepoint(event.pos):
+                        menu_running = False
+                        return
+
+        screen.blit(menu_surf, menu_rect)
+        screen.blit(play_button_surf, play_button_rect)
+        pygame.display.update()
+game_menu()  # Call the menu before starting the game loop
+
 running = True
 game_active = True
-# sound variable
-bounce_sound = mixer.Sound('assets/Spring-Boing.wav')
-ball_Sound = mixer.Sound('assets/throw_sound.wav')
-win_sound = mixer.Sound('assets/yeahoo.wav')
-loose_sound = mixer.Sound('assets/wii-sports-bowling-awww.wav')
-
-
 while running == True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -21,7 +48,6 @@ while running == True:
             pygame.quit()
             exit()
         elif event.type == pygame.KEYDOWN and not shoot:
-
             if event.key == pygame.K_RIGHT:
                 speed += 1
                 memo_speed+=1
@@ -34,6 +60,7 @@ while running == True:
                 shoot = True
                 ball_Sound.play()
                 time = 0  # Reset time after shooting
+
             text1 = text_font.render("Angle : {} ".format(angle), True, color)
             text2 = text_font.render("Speed : {}".format(speed), True, color)
 
@@ -45,10 +72,10 @@ while running == True:
             y_pre = (y_ini - (math.sin(math.radians(angle)) * speed * time2) + 0.5 * gravity * time2 ** 2)
             pygame.draw.circle(back_ground_surf,'white',(x_pre,y_pre),5) # preview trajectory with draw circles
 
-    mouse = pygame.mouse
+    """mouse = pygame.mouse
     if mouse.get_pressed()[0]:
         print(mouse.get_pos())
-    mouse = pygame.mouse
+    mouse = pygame.mouse"""
     if shoot == False:
         arrow_x += c
         angle += c
@@ -63,7 +90,10 @@ while running == True:
         x_val = (x_ini + math.cos(math.radians(angle)) * speed * time)
         y_val = (y_ini - (math.sin(math.radians(angle)) * speed * time) + 0.5 * gravity * time ** 2)
 
-        if y_val + ball_surf.get_height() >= back_ground_surf.get_height()+10:
+        if y_val + ball_surf.get_height() >= back_ground_surf.get_height() + 10 or \
+                ball_rect.colliderect(hitbox_hopper_rect1) or \
+                ball_rect.colliderect(hitbox_hopper_rect2) or \
+                ball_rect.colliderect(hitbox_hopper_rect3):
             # Implement bounce
             bounce_sound.play()
             bouncetest=True
@@ -81,7 +111,7 @@ while running == True:
             bouncetest = True
             bounce_count += 1
             y_val = hopper_rect.topleft[1]+20 - ball_surf.get_height()+20  # Set y_val to the top of the hopper hitbox
-            speed *= 0.7  # Reduce speed due to bounce
+            speed *= retention2  # Reduce speed due to bounce
             angle = -angle  # Reverse angle (simulate bounce)
             x_ini = x_val
             y_ini = y_val
@@ -146,11 +176,11 @@ while running == True:
     screen.blit(text1, (20, 510))
     screen.blit(text2, (30, 470))
 
-    pygame.draw.rect(screen, 'Green', hopper_rect, 5)
+    """pygame.draw.rect(screen, 'Green', hopper_rect, 5)
     pygame.draw.rect(screen, 'Red', hitbox_hopper_rect1,5)
     pygame.draw.rect(screen,'Red',hitbox_hopper_rect2,5)
     pygame.draw.rect(screen, 'Red', hitbox_hopper_rect3, 5)
-    pygame.draw.rect(screen,'Yellow',hitbox_score_rect)
+    pygame.draw.rect(screen,'Yellow',hitbox_score_rect)"""
     trajectory = False
     clock.tick(60)
     pygame.display.update()
